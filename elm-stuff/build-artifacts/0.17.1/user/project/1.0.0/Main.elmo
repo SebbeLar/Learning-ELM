@@ -1,7 +1,5 @@
 var _user$project$Main$viewValidation = function (model) {
-	var _p0 = model.verify ? ((_elm_lang$core$Native_Utils.eq(model.password, model.passwordAgain) && (_elm_lang$core$Native_Utils.cmp(
-		_elm_lang$core$String$length(model.password),
-		7) > 0)) ? {ctor: '_Tuple2', _0: 'green', _1: 'OK'} : {ctor: '_Tuple2', _0: 'red', _1: 'Passwords do not match!'}) : {ctor: '_Tuple2', _0: 'white', _1: ''};
+	var _p0 = _elm_lang$core$Native_Utils.eq(model.password, model.passwordAgain) ? {ctor: '_Tuple2', _0: 'green', _1: 'OK'} : {ctor: '_Tuple2', _0: 'red', _1: 'Passwords do not match!'};
 	var color = _p0._0;
 	var message = _p0._1;
 	return A2(
@@ -31,22 +29,17 @@ var _user$project$Main$update = F2(
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{password: _p1._0});
-			case 'PasswordAgain':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{passwordAgain: _p1._0});
 			default:
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{verify: true});
+					{passwordAgain: _p1._0});
 		}
 	});
-var _user$project$Main$Model = F4(
-	function (a, b, c, d) {
-		return {name: a, password: b, passwordAgain: c, verify: d};
+var _user$project$Main$Model = F3(
+	function (a, b, c) {
+		return {name: a, password: b, passwordAgain: c};
 	});
-var _user$project$Main$model = A4(_user$project$Main$Model, '', '', '', false);
-var _user$project$Main$Verify = {ctor: 'Verify'};
+var _user$project$Main$model = A3(_user$project$Main$Model, '', '', '');
 var _user$project$Main$PasswordAgain = function (a) {
 	return {ctor: 'PasswordAgain', _0: a};
 };
@@ -90,16 +83,6 @@ var _user$project$Main$view = function (model) {
 						_elm_lang$html$Html_Attributes$type$('password'),
 						_elm_lang$html$Html_Attributes$placeholder('Re-enter Password'),
 						_elm_lang$html$Html_Events$onInput(_user$project$Main$PasswordAgain)
-					]),
-				_elm_lang$core$Native_List.fromArray(
-					[])),
-				A2(
-				_elm_lang$html$Html$input,
-				_elm_lang$core$Native_List.fromArray(
-					[
-						_elm_lang$html$Html_Attributes$type$('button'),
-						_elm_lang$html$Html_Attributes$value('Submit'),
-						_elm_lang$html$Html_Events$onSubmit(_user$project$Main$Verify)
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[])),
