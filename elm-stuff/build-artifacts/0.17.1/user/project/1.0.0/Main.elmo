@@ -1,5 +1,26 @@
-var _user$project$Main$viewValidation = function (model) {
-	var _p0 = _elm_lang$core$Native_Utils.eq(model.password, model.passwordAgain) ? {ctor: '_Tuple2', _0: 'green', _1: 'OK'} : {ctor: '_Tuple2', _0: 'red', _1: 'Passwords do not match!'};
+var _user$project$Main$awesomeText = function (model) {
+	var _p0 = model.ready ? (_elm_lang$core$Native_Utils.eq(
+		_elm_lang$core$String$isEmpty(model.firstName),
+		false) ? {
+		ctor: '_Tuple2',
+		_0: 'black',
+		_1: A2(
+			_elm_lang$core$Basics_ops['++'],
+			'Hello ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				model.firstName,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					' ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						model.lastName,
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							', I see that you are ',
+							A2(_elm_lang$core$Basics_ops['++'], model.age, ' years old!'))))))
+	} : {ctor: '_Tuple2', _0: 'red', _1: 'Submit your name.'}) : {ctor: '_Tuple2', _0: 'green', _1: 'Submit your info'};
 	var color = _p0._0;
 	var message = _p0._1;
 	return A2(
@@ -21,33 +42,38 @@ var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p1 = msg;
 		switch (_p1.ctor) {
-			case 'Name':
+			case 'FirstName':
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{name: _p1._0});
-			case 'Password':
+					{firstName: _p1._0, ready: false});
+			case 'LastName':
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{password: _p1._0});
+					{lastName: _p1._0, ready: false});
+			case 'Age':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{age: _p1._0, ready: false});
 			default:
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{passwordAgain: _p1._0});
+					{ready: true});
 		}
 	});
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {name: a, password: b, passwordAgain: c};
+var _user$project$Main$Model = F4(
+	function (a, b, c, d) {
+		return {firstName: a, lastName: b, age: c, ready: d};
 	});
-var _user$project$Main$model = A3(_user$project$Main$Model, '', '', '');
-var _user$project$Main$PasswordAgain = function (a) {
-	return {ctor: 'PasswordAgain', _0: a};
+var _user$project$Main$model = A4(_user$project$Main$Model, '', '', '', false);
+var _user$project$Main$Ready = {ctor: 'Ready'};
+var _user$project$Main$Age = function (a) {
+	return {ctor: 'Age', _0: a};
 };
-var _user$project$Main$Password = function (a) {
-	return {ctor: 'Password', _0: a};
+var _user$project$Main$LastName = function (a) {
+	return {ctor: 'LastName', _0: a};
 };
-var _user$project$Main$Name = function (a) {
-	return {ctor: 'Name', _0: a};
+var _user$project$Main$FirstName = function (a) {
+	return {ctor: 'FirstName', _0: a};
 };
 var _user$project$Main$view = function (model) {
 	return A2(
@@ -61,8 +87,8 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_elm_lang$html$Html_Attributes$type$('text'),
-						_elm_lang$html$Html_Attributes$placeholder('Name'),
-						_elm_lang$html$Html_Events$onInput(_user$project$Main$Name)
+						_elm_lang$html$Html_Attributes$placeholder('First Name'),
+						_elm_lang$html$Html_Events$onInput(_user$project$Main$FirstName)
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[])),
@@ -70,9 +96,9 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$html$Html$input,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$type$('password'),
-						_elm_lang$html$Html_Attributes$placeholder('Password'),
-						_elm_lang$html$Html_Events$onInput(_user$project$Main$Password)
+						_elm_lang$html$Html_Attributes$type$('text'),
+						_elm_lang$html$Html_Attributes$placeholder('Last Name'),
+						_elm_lang$html$Html_Events$onInput(_user$project$Main$LastName)
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[])),
@@ -80,13 +106,23 @@ var _user$project$Main$view = function (model) {
 				_elm_lang$html$Html$input,
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$type$('password'),
-						_elm_lang$html$Html_Attributes$placeholder('Re-enter Password'),
-						_elm_lang$html$Html_Events$onInput(_user$project$Main$PasswordAgain)
+						_elm_lang$html$Html_Attributes$type$('text'),
+						_elm_lang$html$Html_Attributes$placeholder('Age'),
+						_elm_lang$html$Html_Events$onInput(_user$project$Main$Age)
 					]),
 				_elm_lang$core$Native_List.fromArray(
 					[])),
-				_user$project$Main$viewValidation(model)
+				A2(
+				_elm_lang$html$Html$button,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html_Events$onClick(_user$project$Main$Ready)
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text('Submit')
+					])),
+				_user$project$Main$awesomeText(model)
 			]));
 };
 var _user$project$Main$main = {
