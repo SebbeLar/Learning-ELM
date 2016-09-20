@@ -58,7 +58,7 @@ view model =
     , awesomeText model
     ]
 
-awesomeText : Model -> Html msg
+awesomeText : Model -> Html Msg
 awesomeText model =
   let
     (color, message) =

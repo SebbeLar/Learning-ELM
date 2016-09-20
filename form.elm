@@ -63,4 +63,4 @@ viewValidation model =
       else
         ("red", "Passwords do not match!")
   in
-    div [ style [("color", color)] ] [ text message ]   
+    div [ style [("color", color)] ] [ text message ] 
