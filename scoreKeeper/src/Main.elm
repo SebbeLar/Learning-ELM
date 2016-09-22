@@ -6,7 +6,9 @@ import Html.Events exposing (..)
 import Html.App as App
 import String
 
+
 -- model
+
 
 type alias Model =
     { players : List Player
@@ -15,11 +17,13 @@ type alias Model =
     , plays : List Play
     }
 
+
 type alias Player =
     { id : Int
     , name : String
     , points : Int
     }
+
 
 type alias Play =
     { id : Int
@@ -27,6 +31,7 @@ type alias Play =
     , name : String
     , points : Int
     }
+
 
 model : Model
 model =
@@ -36,7 +41,10 @@ model =
     , plays = []
     }
 
+
+
 -- update
+
 
 type Msg
     = Edit Player
@@ -46,12 +54,13 @@ type Msg
     | Cancel
     | DeletePlay Play
 
+
 update : Msg -> Model -> Model
 update msg model =
     case msg of
         Input name ->
             { model | name = name }
-        
+
         Cancel ->
             { model | name = "", playerId = Nothing }
 
@@ -60,8 +69,37 @@ update msg model =
                 model
             else
                 save model
+
+        Score player points ->
+            score model player points
+
+        Edit player ->
+            { model | name = player.name, playerId = Just player.id }
+
         _ ->
-            model    
+            model
+
+
+score : Model -> Player -> Int -> Model
+score model scorer points =
+    let
+        newPlayers =
+            List.map
+                (\player ->
+                    if player.id == scorer.id then
+                        { player
+                            | points = player.points + points
+                        }
+                    else
+                        player
+                )
+                model.players
+
+        play =
+            Play (List.length model.plays) scorer.id scorer.name points
+    in
+        { model | players = newPlayers, plays = play :: model.plays }
+
 
 save : Model -> Model
 save model =
@@ -71,6 +109,7 @@ save model =
 
         Nothing ->
             add model
+
 
 edit : Model -> Int -> Model
 edit model id =
@@ -82,8 +121,9 @@ edit model id =
                         { player | name = model.name }
                     else
                         player
-                    )
-                    model.players
+                )
+                model.players
+
         newPlays =
             List.map
                 (\play ->
@@ -100,6 +140,7 @@ edit model id =
             , name = ""
             , playerId = Nothing
         }
+
 
 add : Model -> Model
 add model =
@@ -119,12 +160,14 @@ add model =
         -- or with cons ( :: ) which adds it to the begining of a List which is the fastest operation
         newPlayers =
             player :: model.players
-
     in
         { model
             | players = newPlayers
             , name = ""
         }
+
+
+
 -- view
 
 
@@ -132,13 +175,79 @@ view : Model -> Html Msg
 view model =
     div [ class "scoreboard" ]
         [ h1 [] [ text "Score Keeper" ]
+        , playerSection model
         , playerForm model
-        , div [] [text (toString model)]
+        , div [] [ text (toString model) ]
         ]
+
+
+playerSection : Model -> Html Msg
+playerSection model =
+    div []
+        [ playerListHeader
+        , playerList model
+        , pointTotal model
+        ]
+
+
+playerListHeader : Html Msg
+playerListHeader =
+    header []
+        [ div [] [ text "Name" ]
+        , div [] [ text "Points" ]
+        ]
+
+
+playerList : Model -> Html Msg
+playerList model =
+    model.players
+        |> List.sortBy .points
+        |> List.reverse
+        |> List.map player
+        |> ul []
+
+
+player : Player -> Html Msg
+player player =
+    li []
+        [ i
+            [ class "edit"
+            , onClick (Edit player)
+            ]
+            []
+        , div []
+            [ text player.name ]
+        , button
+            [ type' "button"
+            , onClick (Score player 2)
+            ]
+            [ text "2pt" ]
+        , button
+            [ type' "button"
+            , onClick (Score player 3)
+            ]
+            [ text "3pt" ]
+        , div []
+            [ text (toString player.points) ]
+        ]
+
+
+pointTotal : Model -> Html Msg
+pointTotal model =
+    let
+        total =
+            List.map .points model.plays
+                |> List.sum
+    in
+        footer []
+            [ div [] [ text "Total:" ]
+            , div [] [ text (toString total) ]
+            ]
+
 
 playerForm : Model -> Html Msg
 playerForm model =
-   Html.form [ onSubmit Save ]
+    Html.form [ onSubmit Save ]
         [ input
             [ type' "text"
             , placeholder "Add/Edit Player..."
@@ -147,14 +256,14 @@ playerForm model =
             ]
             []
         , button [ type' "submit" ] [ text "Save" ]
-        , button [ type' "button", onClick Cancel ] [ text "Cancel" ]  
+        , button [ type' "button", onClick Cancel ] [ text "Cancel" ]
         ]
 
-main : Program Never 
+
+main : Program Never
 main =
     App.beginnerProgram
-    { model = model
-    , view = view
-    , update = update
-    }
-   
+        { model = model
+        , view = view
+        , update = update
+        }
