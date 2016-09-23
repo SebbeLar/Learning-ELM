@@ -12,6 +12,7 @@ import Html.App as App
 type alias Model =
     { todos : List Todo
     , newTodo : String
+    , showTodos : Visability
     }
 
 
@@ -26,12 +27,21 @@ model : Model
 model =
     { todos = []
     , newTodo = ""
+    , showTodos = All
     }
+
+
+type Visability
+    = All
+    | Active
+    | Completed
 
 
 type Msg
     = Add
     | NewTodo String
+    | Done Int
+    | ToggleVisability Visability
 
 
 
@@ -46,6 +56,28 @@ update msg model =
 
         NewTodo string ->
             { model | newTodo = string }
+
+        Done id ->
+            done model id
+
+        ToggleVisability visability ->
+            { model | showTodos = visability }
+
+
+done : Model -> Int -> Model
+done model id =
+    let
+        newTodos =
+            List.map
+                (\todo ->
+                    if todo.id == id then
+                        { todo | done = not todo.done }
+                    else
+                        todo
+                )
+                model.todos
+    in
+        { model | todos = newTodos }
 
 
 add : Model -> Model
@@ -69,7 +101,57 @@ view model =
     div []
         [ todoHeader
         , todoInput model
+        , toggleVisability
+        , todoList model
         , div [] [ text (toString model) ]
+        ]
+
+
+toggleVisability : Html Msg
+toggleVisability =
+    div []
+        [ span [ onClick (ToggleVisability All) ] [ text "All" ]
+        , span [ onClick (ToggleVisability Active) ] [ text "Active" ]
+        , span [ onClick (ToggleVisability Completed) ] [ text "Completed" ]
+        ]
+
+
+todoSection : Model -> Html Msg
+todoSection model =
+    model.todos
+        |> List.map todoItem
+        |> ul []
+
+
+todoList : Model -> Html Msg
+todoList model =
+    let
+        newTodos =
+            showTodo model.showTodos model.todos
+    in
+        newTodos
+            |> List.map todoItem
+            |> ul []
+
+
+showTodo : Visability -> List Todo -> List Todo
+showTodo visability todo =
+    case visability of
+        All ->
+            todo
+
+        Active ->
+            List.filter (\t -> not t.done) todo
+
+        Completed ->
+            List.filter (\t -> t.done) todo
+
+
+todoItem : Todo -> Html Msg
+todoItem todo =
+    li []
+        [ input [ type' "checkbox", onClick (Done todo.id) ] []
+        , span [] [ text todo.text ]
         ]
 
 
