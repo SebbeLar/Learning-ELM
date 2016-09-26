@@ -1,8 +1,47 @@
 module Main exposing (..)
 
-import Html exposing (text, Html)
+import Html exposing (..)
+import Html.App as App
 
 
-main : Html msg
+type alias Model =
+    { cards : List Card
+    }
+
+
+type alias Card =
+    { id : Int
+    , text : String
+    }
+
+
+type Msg
+    = TurnCard
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        TurnCard ->
+            model
+
+
+model : Model
+model =
+    { cards = []
+    }
+
+
+view : Model -> Html Msg
+view model =
+    div []
+        [ text "MY PROJECT IS UP N' RUNNING!" ]
+
+
+main : Program Never
 main =
-    text "Hello World!"
+    App.beginnerProgram
+        { model = model
+        , update = update
+        , view = view
+        }
