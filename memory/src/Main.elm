@@ -28,14 +28,23 @@ update msg model =
 
 model : Model
 model =
-    { cards = []
+    { cards =
+        [ { id = 0, text = "A" }
+        , { id = 1, text = "B" }
+        ]
     }
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ text "MY PROJECT IS UP N' RUNNING!" ]
+        [ cardSection model ]
+
+
+cardSection : Model -> Html Msg
+cardSection model =
+    div []
+        [ text "cardSection" ]
 
 
 main : Program Never
