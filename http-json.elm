@@ -58,6 +58,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ p [] [ text (toString model.response) ]
+        , button [ onClick Fetch ] [ text "Press Me" ]
         ]
 
 
